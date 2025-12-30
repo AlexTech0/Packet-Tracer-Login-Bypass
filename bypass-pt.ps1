@@ -1,9 +1,9 @@
 # Script to Bypass Packet Tracer Login Screen on Windows 10 & 11
 
 <#
-Tested on:
-* Windows 11 25H2
-* Windows 10 22H2
+Successfully tested on:
+* Windows 11 Pro 25H2, using PowerShell 5.1 and 7.5.4
+* Windows 10 Pro 22H2, using PowerShell 5.1 and 7.5.4
 #>
 
 #Requires -RunAsAdministrator
@@ -25,12 +25,13 @@ $script_filename = $MyInvocation.MyCommand.Name # <-- The filename of this .ps1 
 
 function script_help {
     Write-Host "USAGE:`n$script_filename [OPTIONAL_ARG]`n"
-    Write-Host "Arguments:`n-r, -R, --remove`t-->`tRemove Firewall rules (instead of creating them)"
+    Write-Host "Arguments:`n-r, -R, --remove`t-->`tRemove firewall rules (instead of creating them)."
+    Write-Host "-h, --help`t`t-->`tGet this help message."
 }
 
 # To press any key to continue
 function press_any_key {
-    Write-Host -NoNewLine 'Press any key to continue...'
+    Write-Host 'Press any key to continue...'
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 }
 
@@ -41,7 +42,7 @@ function pt_file_dialog {
     Filter = 'Executable Files (*.exe)|*.exe'}
 
 #   Prompt user to locate the .exe file of PT
-    Write-Host "Please, locate Cisco Packet Tracer executable (.exe) file manually, using GUI..."; Start-Sleep 1.5
+    Write-Host "Locate Cisco Packet Tracer executable (.exe) manually..."; Start-Sleep 1.5
     
     press_any_key
 
@@ -50,7 +51,7 @@ function pt_file_dialog {
     
 #   Make sure that this operation wasn't canceled by user
     if ( $script:file_path -eq "" ){
-        Write-Host "`nSorry, looks like this operation has been canceled."
+        Write-Host "Sorry, looks like this operation has been canceled."
         exit 1
     }
 }
@@ -65,7 +66,6 @@ function locate_packet_tracer {
         if ( $input_prompt.ToLower() -eq "y" -or $input_prompt.ToLower() -eq "yes" ){
             $script:file_path = $default_pt9_path
         } else {
-            Start-Sleep 1
             pt_file_dialog
         }
  
@@ -78,7 +78,6 @@ function locate_packet_tracer {
         if ( $input_prompt.ToLower() -eq "y" -or $input_prompt.ToLower() -eq "yes" ){
             $script:file_path = $default_pt8_path
         } else {
-            Start-Sleep 1
             pt_file_dialog
         }
 
